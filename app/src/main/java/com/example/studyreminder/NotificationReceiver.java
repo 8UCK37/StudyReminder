@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -20,8 +21,14 @@ public class NotificationReceiver extends BroadcastReceiver {
     @SuppressLint("MissingPermission")
     @Override
     public void onReceive(Context context, Intent intent) {
-        String message = intent.getStringExtra("toastMsg");
-        System.out.println(message);
-        Toast.makeText(context.getApplicationContext(), message,Toast.LENGTH_SHORT).show();
+        String action = intent.getAction();
+        int notificationId = intent.getIntExtra("notificationId", 0);
+
+        if (action != null && action.equals("ACTION_BUTTON_CLICK")) {
+            String toastMsg = intent.getStringExtra("toastMsg");
+            Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show();
+        }
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.cancel(notificationId);
     }
 }

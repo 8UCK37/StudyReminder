@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-
         questionModelList=new ArrayList<>();
         recyclerView=findViewById(R.id.questionRecyclerView);
 
@@ -88,48 +87,6 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        Intent activityIntent = new Intent(this, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this,0,activityIntent,0);
-
-        Intent firstbroadCastIntent = new Intent (this,NotificationReceiver.class);
-        firstbroadCastIntent.putExtra("toastMsg","OK nicu");
-        PendingIntent btnOne = PendingIntent.getBroadcast(this,0,firstbroadCastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Intent secondbroadCastIntent = new Intent (this,NotificationReceiver.class);
-        secondbroadCastIntent.putExtra("toastMsg","better read up");
-        PendingIntent btnSecond = PendingIntent.getBroadcast(this,1,secondbroadCastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Intent thirdbroadCastIntent = new Intent (this,NotificationReceiver.class);
-        thirdbroadCastIntent.putExtra("toastMsg","way to go");
-        PendingIntent btnThird = PendingIntent.getBroadcast(this,2,thirdbroadCastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-        NotificationManager ntMng = (NotificationManager)  getSystemService(NOTIFICATION_SERVICE);
-        Notification notification;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            notification = new Notification.Builder(this)
-                    .setLargeIcon(largeIcon)
-                    .setSmallIcon(R.drawable.exam)
-                    .setContentText("test")
-                    .setSubText("works")
-                    .setChannelId(CHANNEL_ID)
-                    .setContentIntent(contentIntent)
-                    .setAutoCancel(true)
-                    .addAction(R.mipmap.ic_launcher_round,"I know",btnOne)
-                    .addAction(R.mipmap.ic_launcher_round,"I forgor",btnSecond)
-                    .addAction(R.mipmap.ic_launcher_round,"Fuck this shit",btnThird)
-                    .build();
-            ntMng.createNotificationChannel(new NotificationChannel(CHANNEL_ID,"new channel",NotificationManager.IMPORTANCE_HIGH));
-        }else{
-            notification = new Notification.Builder(this)
-                    .setLargeIcon(largeIcon)
-                    .setSmallIcon(R.drawable.exam)
-                    .setContentText("test")
-                    .setSubText("works")
-                    .build();
-
-        }
-        ntMng.notify(NOTI_ID,notification);
 
     }
     private ArrayList<QuestionModel> initModel(ArrayList<QuestionModel> list){
@@ -195,13 +152,16 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
 
     }
     private void alarm(){
+        if(questionModelList!=null){
         long timeNow = System.currentTimeMillis();
-        long tensecinMillis = 1000*10;
+        //need to randomize this time and everytime a button is pressed a new alarm is set
+        long tensecinMillis = 1000*3;
         Intent intent = new Intent(MainActivity.this,ReminderBroadcast.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,intent,0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         alarmManager.set(AlarmManager.RTC_WAKEUP,
                 timeNow+tensecinMillis,pendingIntent);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.studyreminder;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,29 @@ public class ReminderBroadcast extends BroadcastReceiver {
                 .setContentTitle(qm.getTopic())
                 .setContentText(qm.getQuestion())
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        Intent buttonIntentOne = new Intent(context, NotificationReceiver.class);
+        buttonIntentOne.setAction("ACTION_BUTTON_CLICK");
+        buttonIntentOne.putExtra("notificationId", 0);
+        buttonIntentOne.putExtra("toastMsg", "I Know!");
+        PendingIntent buttonPendingIntentOne = PendingIntent.getBroadcast(context, 0, buttonIntentOne, 0);
+        builder.addAction(R.drawable.baseline_how_to_reg_24, "I Know", buttonPendingIntentOne);
+
+        Intent buttonIntentTwo = new Intent(context, NotificationReceiver.class);
+        buttonIntentTwo.setAction("ACTION_BUTTON_CLICK");
+        buttonIntentTwo.putExtra("notificationId", 0);
+        buttonIntentTwo.putExtra("toastMsg", "I Forgor!");
+        PendingIntent buttonPendingIntentTwo = PendingIntent.getBroadcast(context, 1, buttonIntentTwo, 0);
+        builder.addAction(R.drawable.baseline_how_to_reg_24, "I Forgor", buttonPendingIntentTwo);
+
+        Intent buttonIntentThree = new Intent(context, NotificationReceiver.class);
+        buttonIntentThree.setAction("ACTION_BUTTON_CLICK");
+        buttonIntentThree.putExtra("notificationId", 0);
+        buttonIntentThree.putExtra("toastMsg", "IDC!");
+        PendingIntent buttonPendingIntentThree = PendingIntent.getBroadcast(context, 2, buttonIntentThree, 0);
+        builder.addAction(R.drawable.baseline_how_to_reg_24, "IDC!", buttonPendingIntentThree);
+
+
         NotificationManagerCompat notiManager = NotificationManagerCompat.from(context);
 
         notiManager.notify(200, builder.build());
