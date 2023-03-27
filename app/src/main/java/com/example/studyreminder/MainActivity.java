@@ -1,5 +1,6 @@
 package com.example.studyreminder;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -9,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -28,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements QuestionCardAdapter.setClickListener{
@@ -38,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
 
     RecyclerView recyclerView;
     ArrayList<String> topics,questions;
-    private ArrayList<QuestionModel> questionModelList;
+    public static ArrayList<QuestionModel> questionModelList;
     DbHelper db;
     QuestionCardAdapter adapter;
     public static QuestionModel questionParcel;
@@ -47,7 +50,8 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        createNotificationChannel();
+        alarm();
         Drawable drawable = ResourcesCompat.getDrawable(getResources(),R.drawable.exam,null);
         BitmapDrawable bitmapDrawable =(BitmapDrawable) drawable;
         Bitmap largeIcon = bitmapDrawable.getBitmap();
@@ -75,8 +79,7 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-        topics=new ArrayList<>();
-        questions=new ArrayList<>();
+
         questionModelList=new ArrayList<>();
         recyclerView=findViewById(R.id.questionRecyclerView);
 
@@ -85,13 +88,20 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-
         Intent activityIntent = new Intent(this, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this,0,activityIntent,0);
 
-        Intent broadCastIntent = new Intent (this,NotificationReceiver.class);
-        broadCastIntent.putExtra("toastMsg","test-message");
-        PendingIntent actionIntent = PendingIntent.getBroadcast(this,0,broadCastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent firstbroadCastIntent = new Intent (this,NotificationReceiver.class);
+        firstbroadCastIntent.putExtra("toastMsg","OK nicu");
+        PendingIntent btnOne = PendingIntent.getBroadcast(this,0,firstbroadCastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent secondbroadCastIntent = new Intent (this,NotificationReceiver.class);
+        secondbroadCastIntent.putExtra("toastMsg","better read up");
+        PendingIntent btnSecond = PendingIntent.getBroadcast(this,1,secondbroadCastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent thirdbroadCastIntent = new Intent (this,NotificationReceiver.class);
+        thirdbroadCastIntent.putExtra("toastMsg","way to go");
+        PendingIntent btnThird = PendingIntent.getBroadcast(this,2,thirdbroadCastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         NotificationManager ntMng = (NotificationManager)  getSystemService(NOTIFICATION_SERVICE);
@@ -105,7 +115,9 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
                     .setChannelId(CHANNEL_ID)
                     .setContentIntent(contentIntent)
                     .setAutoCancel(true)
-                    .addAction(R.mipmap.ic_launcher_round,"Toast",actionIntent)
+                    .addAction(R.mipmap.ic_launcher_round,"I know",btnOne)
+                    .addAction(R.mipmap.ic_launcher_round,"I forgor",btnSecond)
+                    .addAction(R.mipmap.ic_launcher_round,"Fuck this shit",btnThird)
                     .build();
             ntMng.createNotificationChannel(new NotificationChannel(CHANNEL_ID,"new channel",NotificationManager.IMPORTANCE_HIGH));
         }else{
@@ -123,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
     private ArrayList<QuestionModel> initModel(ArrayList<QuestionModel> list){
         db=new DbHelper(this);
         Cursor cursor=db.getdata();
+
         if(cursor.getCount()==0){
             Toast.makeText(getApplicationContext(),"No data exists for this user",Toast.LENGTH_SHORT).show();
             return list;
@@ -133,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
                 QuestionModel c=new QuestionModel(topic,question);
                 list.add(c);
             }
+
             return list;
         }
     }
@@ -168,5 +182,26 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
     @Override
     public void onEditClicked(QuestionModel c) {
 
+    }
+    private void createNotificationChannel(){
+            CharSequence  name = "new channel";
+            String description = "reminder";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel= new NotificationChannel("notify-me",name,importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+
+    }
+    private void alarm(){
+        long timeNow = System.currentTimeMillis();
+        long tensecinMillis = 1000*10;
+        Intent intent = new Intent(MainActivity.this,ReminderBroadcast.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,intent,0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP,
+                timeNow+tensecinMillis,pendingIntent);
     }
 }
