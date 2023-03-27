@@ -5,13 +5,16 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
+import com.example.studyreminder.dao.DbHelper;
 import com.example.studyreminder.databinding.ActivityMainBinding;
 import com.google.android.material.navigation.NavigationView;
 
@@ -22,16 +25,29 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements QuestionCardAdapter.setClickListener{
     public static final String CHANNEL_ID="My Channel";
     public static final int NOTI_ID=42069;
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
+    RecyclerView recyclerView;
+    ArrayList<String> topics,questions;
+    private ArrayList<QuestionModel> questionModelList;
+    DbHelper db;
+    QuestionCardAdapter adapter;
+    public static QuestionModel questionParcel;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Drawable drawable = ResourcesCompat.getDrawable(getResources(),R.drawable.exam,null);
         BitmapDrawable bitmapDrawable =(BitmapDrawable) drawable;
         Bitmap largeIcon = bitmapDrawable.getBitmap();
@@ -57,6 +73,18 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+
+        topics=new ArrayList<>();
+        questions=new ArrayList<>();
+        questionModelList=new ArrayList<>();
+        recyclerView=findViewById(R.id.questionRecyclerView);
+
+        adapter = new QuestionCardAdapter(initModel(questionModelList),this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
 
         Intent activityIntent = new Intent(this, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this,0,activityIntent,0);
@@ -92,7 +120,22 @@ public class MainActivity extends AppCompatActivity {
         ntMng.notify(NOTI_ID,notification);
 
     }
-
+    private ArrayList<QuestionModel> initModel(ArrayList<QuestionModel> list){
+        db=new DbHelper(this);
+        Cursor cursor=db.getdata();
+        if(cursor.getCount()==0){
+            Toast.makeText(getApplicationContext(),"No data exists for this user",Toast.LENGTH_SHORT).show();
+            return list;
+        }else{
+            while(cursor.moveToNext()){
+                String topic=cursor.getString(1);
+                String question=cursor.getString(2);
+                QuestionModel c=new QuestionModel(topic,question);
+                list.add(c);
+            }
+            return list;
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -105,5 +148,25 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onDeleteClicked(QuestionModel c) {
+
+    }
+
+    @Override
+    public void onPlusClicked(QuestionModel c) {
+
+    }
+
+    @Override
+    public void onMinusClicked(QuestionModel c) {
+
+    }
+
+    @Override
+    public void onEditClicked(QuestionModel c) {
+
     }
 }
