@@ -50,11 +50,10 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         createNotificationChannel();
         alarm();
-        Drawable drawable = ResourcesCompat.getDrawable(getResources(),R.drawable.exam,null);
-        BitmapDrawable bitmapDrawable =(BitmapDrawable) drawable;
-        Bitmap largeIcon = bitmapDrawable.getBitmap();
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
