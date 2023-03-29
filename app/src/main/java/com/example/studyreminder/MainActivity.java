@@ -37,6 +37,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements QuestionCardAdapter.setClickListener{
     public static final String CHANNEL_ID="My Channel";
     public static final int NOTI_ID=42069;
+    public static Bitmap largeIcon;
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 

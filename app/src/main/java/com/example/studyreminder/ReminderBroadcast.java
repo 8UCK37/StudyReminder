@@ -1,5 +1,6 @@
 package com.example.studyreminder;
 
+
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -7,10 +8,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.IconCompat;
 
 import com.example.studyreminder.dao.DbHelper;
 
@@ -25,16 +31,22 @@ public class ReminderBroadcast extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+
         questionList=MainActivity.questionModelList;
         Collections.shuffle(questionList);
-        for(QuestionModel qm : questionList){
-            System.out.println(qm.getTopic() + " : " + qm.getQuestion());
-        }
+//        for(QuestionModel qm : questionList){
+//            System.out.println(qm.getTopic() + " : " + qm.getQuestion());
+//        }
         QuestionModel qm = questionList.get(0);
-        System.out.println("first ele"+qm.getTopic() + " : " + qm.getQuestion());
+        //System.out.println("first ele"+qm.getTopic() + " : " + qm.getQuestion());
+
+        Drawable drawable = ResourcesCompat.getDrawable(context.getResources(),R.drawable.exam,null);
+        BitmapDrawable bitmapDrawable= (BitmapDrawable) drawable;
+        Bitmap largeIcon = bitmapDrawable.getBitmap();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "notify-me")
-                .setSmallIcon(R.drawable.exam)
+                .setLargeIcon(largeIcon)
+                .setSmallIcon(R.drawable.baseline_how_to_reg_24)
                 .setContentTitle(qm.getTopic())
                 .setContentText(qm.getQuestion())
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
