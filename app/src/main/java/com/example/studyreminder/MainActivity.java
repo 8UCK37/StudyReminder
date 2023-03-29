@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.PrintStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements QuestionCardAdapter.setClickListener{
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
         super.onCreate(savedInstanceState);
 
         createNotificationChannel();
-        alarm();
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -102,7 +103,10 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
                 QuestionModel c=new QuestionModel(topic,question);
                 list.add(c);
             }
-
+            System.out.println("length"+list.size());
+            if(list.size()>=1){
+                alarm();
+            }
             return list;
         }
     }
@@ -150,17 +154,17 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
             notificationManager.createNotificationChannel(channel);
 
     }
-    private void alarm(){
-        if(questionModelList!=null){
+    public void alarm(){
+
         long timeNow = System.currentTimeMillis();
         //need to randomize this time and everytime a button is pressed a new alarm is set
         long tensecinMillis = 1000*3;
         Intent intent = new Intent(MainActivity.this,ReminderBroadcast.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,intent,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,intent,PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         alarmManager.set(AlarmManager.RTC_WAKEUP,
                 timeNow+tensecinMillis,pendingIntent);
-        }
+
     }
 }

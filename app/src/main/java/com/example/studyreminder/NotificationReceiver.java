@@ -1,7 +1,11 @@
 package com.example.studyreminder;
 
 
+import static android.content.Context.ALARM_SERVICE;
+import android.app.AlarmManager;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,8 +31,11 @@ public class NotificationReceiver extends BroadcastReceiver {
         if (action != null && action.equals("ACTION_BUTTON_CLICK")) {
             String toastMsg = intent.getStringExtra("toastMsg");
             Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show();
+
         }
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.cancel(notificationId);
     }
+
+
 }
