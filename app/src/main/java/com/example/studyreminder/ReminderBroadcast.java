@@ -62,7 +62,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent newIntent = new Intent(context, ReminderBroadcast.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, newIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, newIntent, PendingIntent.FLAG_IMMUTABLE);
         long newAlarmTime = System.currentTimeMillis() + 1000*3;
         alarmManager.set(AlarmManager.RTC_WAKEUP, newAlarmTime, pendingIntent);
 
