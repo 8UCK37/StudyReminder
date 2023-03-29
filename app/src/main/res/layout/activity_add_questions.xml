@@ -84,6 +84,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/question" />
 
+        <TextView
+            android:id="@+id/setReminder"
+            android:layout_width="157dp"
+            android:layout_height="60dp"
+            android:background="@drawable/rectangle_background"
+            android:backgroundTint="@color/zomatored"
+            android:gravity="center"
+            android:text="Set reminders"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:layout_marginTop="70dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saveBtn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

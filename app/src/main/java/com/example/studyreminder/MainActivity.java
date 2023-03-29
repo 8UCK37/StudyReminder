@@ -105,9 +105,7 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
                 list.add(c);
             }
             System.out.println("length"+list.size());
-            if(list.size()>=1){
-                alarm();
-            }
+
             return list;
         }
     }
@@ -155,17 +153,5 @@ public class MainActivity extends AppCompatActivity implements QuestionCardAdapt
             notificationManager.createNotificationChannel(channel);
 
     }
-    public void alarm(){
 
-        long timeNow = System.currentTimeMillis();
-        //need to randomize this time and everytime a button is pressed a new alarm is set
-        long tensecinMillis = 1000*3;
-        Intent intent = new Intent(MainActivity.this,ReminderBroadcast.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,intent,PendingIntent.FLAG_IMMUTABLE);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        alarmManager.set(AlarmManager.RTC_WAKEUP,
-                timeNow+tensecinMillis,pendingIntent);
-
-    }
 }
