@@ -14,9 +14,9 @@ import com.example.studyreminder.R;
 import com.example.studyreminder.dao.DbHelper;
 
 public class AddQuestionsActivity extends AppCompatActivity {
-    private ImageView back;
+    private ImageView back,uploadIcon;
     private EditText Topic,Question;
-    private TextView saveBtn;
+    private TextView saveBtn,uploadPrompt;
     private String topic,question;
     DbHelper db;
     @Override
@@ -32,6 +32,25 @@ public class AddQuestionsActivity extends AppCompatActivity {
                 startActivity(new Intent(AddQuestionsActivity.this,MainActivity.class));
             }
         });
+
+        uploadIcon=findViewById(R.id.uploadIcon);
+
+        uploadIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"upload icon",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        uploadPrompt=findViewById(R.id.uploadText);
+
+        uploadPrompt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"upload text",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         Topic=findViewById(R.id.topicAdd);
         Question=findViewById(R.id.question);
 

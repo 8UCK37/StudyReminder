@@ -21,6 +21,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/uploadIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="75dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/baseline_file_upload_24"
+            app:layout_constraintBottom_toBottomOf="@+id/back_tap"
+            app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/uploadText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:text="Upload EXEL Instead"
+            app:layout_constraintEnd_toEndOf="@+id/uploadIcon"
+            app:layout_constraintStart_toStartOf="@+id/uploadIcon"
+            app:layout_constraintTop_toBottomOf="@+id/uploadIcon" />
         <EditText
             android:id="@+id/topicAdd"
             android:layout_width="match_parent"
@@ -65,6 +83,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/question" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
